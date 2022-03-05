@@ -1,0 +1,61 @@
+#include<stdio.h>
+#include<graphics.h>
+#include<conio.h>
+#include<stdlib.h>
+#include<math.h>
+#include"LINES.CPP"     //LINES.CPP Is my own Code for Line Drawing Refer Folder 1
+void frac(int x1,int y1,int x2,int y2,int it,int ic)
+{
+int m,g=1,dx,dy,m1,m2,len,dev;
+float gauss;
+if(it == ic)
+{
+dda(x1,y1,x2,y2,2);
+return;
+}
+dx = (x2 - x1);
+dy = (y2 - y1);
+m1 = (x1 + x2)/2;
+m2 = (y1 + y2)/2;
+len = sqrt((dx * dx) + (dy * dy));
+gauss = rand() % 10;
+gauss = gauss / 10;
+int r = rand() % 2;
+if(r == 1)
+{
+dev = len * g * gauss;
+}
+else
+{
+dev = (len * g * gauss) * (-1);
+}
+if(dx  > dy)
+{
+m2 = m2 + dev;
+}
+else
+{
+m1 = m1 + dev;
+}
+frac(x1,y1,m1,m2,it+1,ic);
+frac(m1,m2,x2,y2,it+1,ic);
+}
+
+void fractal()
+{
+int x1,x2,y1,y2,ic;
+printf("Enter\nX1 : ");scanf("%d",&x1);
+printf("Y1 : ");scanf("%d",&y1);
+printf("Enter\nX2 : ");scanf("%d",&x2);
+printf("Y2 : ");scanf("%d",&y2);
+printf("Enter Number Of Iterations : ");scanf("%d",&ic);
+frac(x1,y1,x2,y2,0,ic);
+}
+
+void main()
+{
+int gd=DETECT,gm;
+initgraph(&gd,&gm,"C:\\TURBOC3\\BGI");
+fractal();
+getch();
+}

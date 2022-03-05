@@ -1,0 +1,55 @@
+#include<stdio.h>
+#include<graphics.h>
+#include<conio.h>
+#include<stdlib.h>
+#include<math.h>
+#include"LINES.CPP"
+void koch_curve(int x1,int y1,int x2,int y2,int ic,int it)
+{
+int m,a1,b1,a2,b2,len,xnew,ynew,dx,dy;
+float t,ab,c,d=1.047;
+if(ic == it)
+{
+return;
+}
+else
+{
+a1 = x1 + (x2 - x1)/3;
+a2 = y1 + (y2 - y1)/3;
+b1 = a1 + (x2 - x1)/3;
+b2 = a2 + (y2 - y1)/3;
+ab = 3.14/3;
+xnew = a1 + (b1 - a1) * cos(ab) + (b2 - a2) * sin(ab);
+ynew = a2 - (b1 - a1) * sin(ab) + (b2 - a2) * cos(ab);
+
+dda(x1,y1,x2,y2,2);
+dda(a1,a2,b1,b2,0);
+dda(a1,a2,xnew,ynew,2);
+dda(xnew,ynew,b1,b2,2);
+koch_curve(x1,y1,a1,a2,ic+1,it);
+koch_curve(a1,a2,xnew,ynew,ic+1,it);
+koch_curve(xnew,ynew,b1,b2,ic+1,it);
+koch_curve(b1,b2,x2,y2,ic+1,it);
+}
+}
+
+void traidic()
+{
+int x1,y1,x2,y2,it;
+cleardevice();
+outtextxy(320,0,"Traidic Koch Curve");
+printf("Enter\nX1 : ");scanf("%d",&x1);
+printf("Y1 : ");scanf("%d",&y1);
+printf("Enter\nX2 : ");scanf("%d",&x2);
+printf("Y2 : ");scanf("%d",&y2);
+printf("Enter Number Of Iterations : ");scanf("%d",&it);
+koch_curve(x1,y1,x2,y2,0,it);
+}
+
+void main()
+{
+int gd=DETECT,gm;
+initgraph(&gd,&gm,"C:\\TURBOC3\\BGI");
+traidic();
+getch();
+}

@@ -1,0 +1,381 @@
+#include<stdio.h>
+#include<conio.h>
+#include<math.h>
+#include"Polygon.CPP"
+void createMatrix(int );
+void calc_matrix();
+void color();
+
+int P1[100][3];
+int P2[100][3];
+float T[3][3];
+//Shear
+int shx;
+int shy;
+//Scale
+int sx;
+int sy;
+//Transform
+int tx;
+int ty;
+//Rotate
+float thetha,radian;
+
+void xShear()
+{
+printf("Enter The X Shear Parameter : ");
+scanf("%d",&shx);
+createMatrix(2);
+calc_matrix();
+for(int i=0;i<vertices;i++)
+{
+obj.x[i] = P2[i][0];
+obj.y[i] = P2[i][1];
+}
+draw_polygon();
+color();
+}
+
+void yShear()
+{
+printf("Enter The Y Shear Parameter : ");
+scanf("%d",&shy);
+createMatrix(3);
+calc_matrix();
+for(int i=0;i<vertices;i++)
+{
+obj.x[i] = P2[i][0];
+obj.y[i] = P2[i][1];
+}
+draw_polygon();
+color();
+}
+
+void scale()
+{
+printf("Enter The X Scaling Factor : ");
+scanf("%d",&sx);
+printf("Enter The Y Scaling Factor : ");
+scanf("%d",&sy);
+createMatrix(4);
+calc_matrix();
+for(int i=0;i<vertices;i++)
+{
+obj.x[i] = P2[i][0];
+obj.y[i] = P2[i][1];
+}
+draw_polygon();
+}
+
+void translate()
+{
+printf("Enter The X Translating Factor : ");
+scanf("%d",&tx);
+printf("Enter The Y Translating Factor : ");
+scanf("%d",&ty);
+createMatrix(5);
+calc_matrix();
+for(int i=0;i<vertices;i++)
+{
+obj.x[i] = P2[i][0];
+obj.y[i] = P2[i][1];
+}
+draw_polygon();
+}
+
+void reflectX()
+{
+createMatrix(6);
+calc_matrix();
+for(int i=0;i<vertices;i++)
+{
+obj.x[i] = P2[i][0];
+obj.y[i] = P2[i][1];
+}
+draw_polygon();
+}
+
+void reflectY()
+{
+createMatrix(7);
+calc_matrix();
+for(int i=0;i<vertices;i++)
+{
+obj.x[i] = P2[i][0];
+obj.y[i] = P2[i][1];
+}
+draw_polygon();
+}
+
+void reflectOrigin()
+{
+createMatrix(8);
+calc_matrix();
+for(int i=0;i<vertices;i++)
+{
+obj.x[i] = P2[i][0];
+obj.y[i] = P2[i][1];
+}
+draw_polygon();
+}
+
+void reflectXY()
+{
+createMatrix(9);
+calc_matrix();
+for(int i=0;i<vertices;i++)
+{
+obj.x[i] = P2[i][0];
+obj.y[i] = P2[i][1];
+}
+draw_polygon();
+}
+
+void rotateClockwise()
+{
+printf("Enter Rotation Angle In Degree : ");
+scanf("%f",&thetha);
+radian = (thetha * (3.1415/180));
+printf("SIN VALUE IS : %f\n",sin(radian));
+printf("COS VALUE IS : %f\n",cos(radian));
+createMatrix(10);
+calc_matrix();
+for(int i=0;i<vertices;i++)
+{
+obj.x[i] = P2[i][0];
+obj.y[i] = P2[i][1];
+}
+draw_polygon();
+}
+
+void rotateAnticlockwise()
+{
+printf("Enter Rotation Angle In Degree : ");
+scanf("%f",&thetha);
+radian = (thetha * (3.1415/180));
+printf("SIN VALUE IS : %f\n",sin(radian));
+printf("COS VALUE IS : %f\n",cos(radian));
+createMatrix(11);
+calc_matrix();
+for(int i=0;i<vertices;i++)
+{
+obj.x[i] = P2[i][0];
+obj.y[i] = P2[i][1];
+}
+draw_polygon();
+}
+
+void createMatrix(int choice)
+{
+switch(choice)
+{
+case 1://Vertices Matrix
+for(int i=0;i<vertices;i++)
+{
+P1[i][0] = obj.x[i];
+P1[i][1] = obj.y[i];
+P1[i][2] = 1;
+}
+break;
+
+case 2: //X Shear
+T[0][0] = 1;
+T[0][1] = 0;
+T[0][2] = 0;
+T[1][0] = shx;
+T[1][1] = 1;
+T[1][2] = 0;
+T[2][0] = 0;
+T[2][1] = 0;
+T[2][2] = 1;
+break;
+
+case 3: //Y Shear
+T[0][0] = 1;
+T[0][1] = shy;
+T[0][2] = 0;
+T[1][0] = 0;
+T[1][1] = 1;
+T[1][2] = 0;
+T[2][0] = 0;
+T[2][1] = 0;
+T[2][2] = 1;
+break;
+
+case 4://Scale
+T[0][0] = sx;
+T[0][1] = 0;
+T[0][2] = 0;
+T[1][0] = 0;
+T[1][1] = sy;
+T[1][2] = 0;
+T[2][0] = 0;
+T[2][1] = 0;
+T[2][2] = 1;
+break;
+
+case 5://Translate
+T[0][0] = 1;
+T[0][1] = 0;
+T[0][2] = 0;
+T[1][0] = 0;
+T[1][1] = 1;
+T[1][2] = 0;
+T[2][0] = tx;
+T[2][1] = ty;
+T[2][2] = 1;
+break;
+
+case 6://ReflectX
+T[0][0] = 1;
+T[0][1] = 0;
+T[0][2] = 0;
+T[1][0] = 0;
+T[1][1] = -1;
+T[1][2] = 0;
+T[2][0] = 0;
+T[2][1] = 0;
+T[2][2] = 1;
+break;
+
+case 7://ReflectY
+T[0][0] = -1;
+T[0][1] = 0;
+T[0][2] = 0;
+T[1][0] = 0;
+T[1][1] = 1;
+T[1][2] = 0;
+T[2][0] = 0;
+T[2][1] = 0;
+T[2][2] = 1;
+break;
+
+case 8://ReflectOrigin
+T[0][0] = -1;
+T[0][1] = 0;
+T[0][2] = 0;
+T[1][0] = 0;
+T[1][1] = -1;
+T[1][2] = 0;
+T[2][0] = 0;
+T[2][1] = 0;
+T[2][2] = 1;
+break;
+
+case 9://ReflectX=Y
+T[0][0] = 0;
+T[0][1] = 1;
+T[0][2] = 0;
+T[1][0] = 1;
+T[1][1] = 0;
+T[1][2] = 0;
+T[2][0] = 0;
+T[2][1] = 0;
+T[2][2] = 1;
+break;
+
+case 10: //Rotate Clockwise
+T[0][0] = cos(radian);
+T[0][1] = sin(radian);
+T[0][2] = 0;
+T[1][0] = -(sin(radian));
+T[1][1] = cos(radian);
+T[1][2] = 0;
+T[2][0] = 0;
+T[2][1] = 0;
+T[2][2] = 1;
+break;
+
+case 11: //Rotate Anti-Clockwise
+T[0][0] = cos(radian);
+T[0][1] = -sin(radian);
+T[0][2] = 0;
+T[1][0] = sin(radian);
+T[1][1] = cos(radian);
+T[1][2] = 0;
+T[2][0] = 0;
+T[2][1] = 0;
+T[2][2] = 1;
+break;
+}
+}
+
+void calc_matrix()
+{
+int i,j,k;
+for(i=0;i<vertices;i++)
+{
+for(j=0;j<3;j++)
+{
+P2[i][j] = 0;
+for(k=0;k<3;k++)
+{
+P2[i][j] = P2[i][j] + P1[i][k] * T[k][j];
+}
+}
+}
+}
+
+void grid()
+{
+int x = getmaxx();
+int y = getmaxy();
+dda(0,y/2,x,y/2,1);
+dda(x/2,0,x/2,y,1);
+}
+
+void accept_polygon()
+{
+int i;
+printf("Enter Number Of Vertices In Your Polygon \n");
+scanf("%d",&vertices);
+for(i=0;i<vertices;i++)
+{
+printf("Enter Co-ordinates For The %d Vertice w.r.t To Origin i.e. 320,240 ",i+1);
+printf("X : ");scanf("%f",&obj.x[i]);
+printf("Y : ");scanf("%f",&obj.y[i]);
+}
+}
+
+void color()
+{
+int x,y,c;
+printf("Enter Internal Point Of The Polygon\n");
+printf("X : ");scanf("%d",&x);
+printf("Y : ");scanf("%d",&y);
+printf("Enter Color : ");scanf("%d",&c);
+x = 320 + (x * 10);
+y = 240 - (y * 10);
+floodFillAlgo(x,y,c,0);
+}
+
+void main()
+{
+int gd=DETECT,gm;
+int choice;
+initgraph(&gd,&gm,"C:\\TURBOC3\\BGI");
+accept_polygon();
+cleardevice();
+createMatrix(1);
+draw_polygon();
+grid();
+color();
+printf("Tranform The Object\n1.X Shear\n2.Y Shear\n3.Scale\n4.Translate\n5.Reflect about X\n6.Reflect about Y\n7.Reflect about Origin\n8.Reflect about X=Y Line\n9.Rotate Clockwise\n10.Rotate Anti-Clockwise\n");scanf("%d",&choice);
+
+switch(choice)
+{
+case 1: xShear();break;
+case 2: yShear();break;
+case 3: scale();break;
+case 4: translate();break;
+case 5: reflectX();break;
+case 6: reflectY();break;
+case 7: reflectOrigin();break;
+case 8: reflectXY();break;
+case 9: rotateClockwise();break;
+case 10: rotateAnticlockwise();break;
+}
+
+getch();
+closegraph();
+}

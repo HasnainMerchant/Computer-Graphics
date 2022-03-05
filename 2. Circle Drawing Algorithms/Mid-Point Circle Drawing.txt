@@ -1,0 +1,57 @@
+#include<stdio.h>
+#include<conio.h>
+#include<iostream.h>
+#include<graphics.h>
+void pixel(float,float,float,float);
+
+void midpoint(float xc,float yc,float r)
+{
+float x,y,p;
+x = 0;
+y = r;
+p = 1 - r;
+pixel(xc,yc,x,y);
+while(x<y)
+{
+if(p<0)
+{
+x = x + 1;
+p = p + 2*(x) + 1;
+}
+else
+{
+x = x + 1;
+y = y - 1;
+p = p + 2*(x-y) + 1;
+}
+pixel(xc,yc,x,y);
+}
+}
+void pixel(float xc,float yc,float x,float y)
+{
+//First Quadrant
+putpixel(xc+x,yc+y,RED);
+putpixel(xc+y,yc+x,RED);
+//Second Quadrant
+putpixel(xc-x,yc+y,RED);
+putpixel(xc-y,yc+x,RED);
+//Third Quadrant
+putpixel(xc-x,yc-y,RED);
+putpixel(xc-y,yc-x,RED);
+//Fourth Quadrant
+putpixel(xc+x,yc-y,RED);
+putpixel(xc+y,yc-x,RED);
+}
+
+void main()
+{
+float x,y,r;
+int gd=DETECT,gm;
+initgraph(&gd,&gm,"C:\\TURBOC3\\BGI");
+printf("Enter The Coordinates : \nX : ");scanf("%f",&x);
+printf("Y : ");scanf("%f",&y);
+printf("Radius : ");scanf("%f",&r);
+midpoint(x,y,r);
+getch();
+closegraph();
+}

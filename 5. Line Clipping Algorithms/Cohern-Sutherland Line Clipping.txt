@@ -1,0 +1,137 @@
+#include<graphics.h>
+#include<iostream.h>
+#include<conio.h>
+#include<math.h>
+
+static int l = 1, r = 2, b = 4, t = 8, xmin, ymin, xmax, ymax;
+int code(int x, int y)
+{
+int c = 0;
+if(y>ymax)
+c=c|t;
+
+if(y<ymin)
+c=c|b;
+
+if(x<xmin)
+c=c|l;
+
+if(x>xmax)
+c=c|r;
+
+return c;
+}
+
+
+
+
+
+void main()
+{
+   int gd = DETECT, gm;
+   initgraph(&gd, &gm, "C:\\TURBOC3\\BGI");
+
+   setcolor(WHITE);
+   cout<<"\nEnter windows minimum & maximum values: ";
+   cin>>xmin>>ymin>>xmax>>ymax;
+   rectangle(xmin, ymin, xmax, ymax);
+
+   int x1, y1, x2, y2, oc1, oc2, accept, da=0;
+   cout<<"\nEnter the endpoints of the line: ";
+   cin>>x1>>y1>>x2>>y2;
+   line(x1,y1,x2,y2);
+   getch();
+
+   oc1 = code(x1,y1);
+   oc2 = code(x2, y2);
+
+   if(oc1 == 0 && oc2 == 0)
+   da = 1;
+
+   accept = 0;
+
+   while(1)
+   {
+      float m=(float)(y2-y1)/(x2-x1);
+      if(oc1 == 0 && oc2 == 0)
+      {
+	 accept = 1;
+	 break;
+      }
+
+      else if((oc1 & oc2) !=0)
+      {
+	 break;
+      }
+
+      else
+      {
+	 int x,y;
+	 int temp;
+	 if(oc1 ==0)
+	    temp = oc2;
+
+	 else
+	    temp = oc1;
+
+	 if(temp & t)
+	 {
+	    x = x1 + (ymax-y1)/m;
+	    y = ymax;
+	 }
+
+	 else if(temp & b)
+	 {
+	    x = x1 + (ymin - y1)/m;
+	    y = ymin;
+	 }
+
+	 else if(temp & l)
+	 {
+	    x = xmin;
+	    y = y1 + m*(xmin-x1);
+	 }
+
+	 else if(temp & r)
+	 {
+	    x = xmax;
+	    y = y1 + m*(xmax - x1);
+	 }
+
+	 if(temp == oc1)
+	 {
+	    x1 = x;
+	    y1 = y;
+	    oc1 = code(x1, y1);
+	 }
+	 else
+	 {
+	    x2 = x;
+	    y2 = y;
+	    oc2 = code(x2, y2);
+	 }
+
+      }
+
+   }
+
+   clrscr();
+   cleardevice();
+   rectangle(xmin, ymin, xmax, ymax);
+   cout<<"\nAfter clipping : "<<"\n";
+   if(accept)
+      {
+      setcolor(YELLOW);
+      if(da==1)
+      cout<<"Line was totally inside"<<"\n";
+      cout<<"Clipped line in Yellow";
+      line(x1, y1, x2, y2);
+      }
+   else
+   cout<<"Line was out of Clipping Window";
+
+   getch();
+   closegraph();
+
+
+}

@@ -1,0 +1,193 @@
+#include<stdio.h>
+#include<conio.h>
+#include<stdlib.h>
+#include<graphics.h>
+#include"LINES.CPP"   //LINES.CPP is my own Line Drawing Code Refer Folder 1
+
+struct Pixel{
+    int x,y;
+    struct Pixel *next;
+};
+
+struct Pixel *Entry;
+struct Pixel *Start;
+struct Pixel *Last;
+
+int vertices;
+
+void add(int x,int y){
+   Entry = (struct Pixel*)malloc(sizeof(struct Pixel));
+   Entry->x = x;
+   Entry->y = y;
+   Entry->next = NULL;
+   Last->next = Entry;
+   Last = Entry;
+}
+
+struct polygon
+{
+float x[100],y[100];
+}obj;
+
+void accept_polygon()
+{
+int i;
+printf("Enter Number Of Vertices In Your Polygon \n");
+scanf("%d",&vertices);
+for(i=0;i<vertices;i++)
+{
+printf("Enter Co-ordinates For The %d Vertice ",i+1);
+printf("X : ");scanf("%f",&obj.x[i]);
+printf("Y : ");scanf("%f",&obj.y[i]);
+}
+cleardevice();
+}
+
+void draw_polygon()
+{
+for(int i=0;i<vertices-1;i++)
+{
+dda(obj.x[i],obj.y[i],obj.x[i+1],obj.y[i+1]);
+}
+dda(obj.x[0],obj.y[0],obj.x[i],obj.y[i]);
+}
+
+void floodFillAlgo(int x, int y, int newColor, int oldColor)
+{
+    //4-Connect Method (Non-Recursion Linked List)
+    Start = (struct Pixel*)malloc(sizeof(struct Pixel));
+    Start->x = x;
+    Start->y = y;
+    Start->next = NULL;
+    Last = Start;
+    while(Start != NULL){
+	    putpixel(x,y,newColor);
+	 if(getpixel(x+1,y) == oldColor){    //Here 200 is MAX of X
+	    putpixel(x+1,y,newColor);
+	    add(x+1,y);
+	 }
+	 if(getpixel(x-1,y) == oldColor){    //Here 100 is MIN of X
+	    putpixel(x-1,y,newColor);
+	    add(x-1,y);
+	 }
+	 if(getpixel(x,y+1) == oldColor){    //Here 200 is MAX of Y
+	    putpixel(x,y+1,newColor);
+	    add(x,y+1);
+	 }
+	 if(getpixel(x,y-1) == oldColor){    //Here 100 is MIN of Y
+	    putpixel(x,y-1,newColor);
+	    add(x,y-1);
+	 }
+	 Entry = Start;
+	 Start = Start->next;
+	 x = Start->x;
+	 y = Start->y;
+	 free(Entry);
+    }
+}
+
+void main()
+{
+    int x,y,oldColor,newColor;
+    int gd=DETECT,gm;
+    initgraph(&gd,&gm,"C:\\TURBOC3\\BGI");
+    accept_polygon();
+    draw_polygon();
+    printf("\n\n\nEnter Any Interior Co-ordinates Of Polygon\n");
+    printf("X : ");scanf("%d",&x);
+    printf("Y : ");scanf("%d",&y);
+    oldColor = getpixel(x,y);
+    printf("Enter The New Color : ");scanf("%d",&newColor);
+    cleardevice();
+    draw_polygon();
+    floodFillAlgo(x,y,newColor,oldColor);
+    getch();
+    closegraph();
+}
+
+LINES.CPP
+/*#include<graphics.h>
+
+void dda(float x1,float y1,float x2,float y2)
+{
+int k;
+float s,dx,dy,x,y;
+
+dx = (float)(x2 - x1);
+dy = (float)(y2 - y1);
+if(x1 >= x2 && y1 >= y2)
+{
+dx = dx * (-1);
+dy = dy * (-1);
+}
+if(dx >= dy)
+{
+s = dx;
+}
+else
+{
+s = dy;
+}
+dx = dx/s;
+dy = dy/s;
+x = x1;
+y = y1;
+k = 1;
+if(x1 >= x2 && y1 >= y2)
+{
+while(k <= s)
+{
+putpixel(x,y,BLUE);
+x = x - dx;
+y = y - dy;
+k = k + 1;
+}
+}
+else
+{
+while(k <= s)
+{
+putpixel(x,y,BLUE);
+x = x + dx;
+y = y + dy;
+k = k + 1;
+}
+}
+}
+
+void bresenham(float x1,float y1,float x2,float y2)
+{
+float m,dx,dy,p;
+
+dx = x2 - x1;
+dy = y2 - y1;
+
+if(dx < 0){
+float temp = x2;
+x2 = x1;
+x1 = temp;
+dx *= -1;
+}
+if(dy < 0){
+float temp = y2;
+y2 = y1;
+y1 = temp;
+dy *= -1;
+}
+p = (float)(2*(dy) - (dx));
+for(int x = x1,y = y1;x <= x2;x++)
+{
+if(p < 0)
+{
+putpixel(x,y,BLUE);
+p = (float)(p + 2*(dy));
+}
+else
+{
+putpixel(x,y,BLUE);
+p = (float)(p + (2*(dy) - 2*(dx)));
+y++;
+}
+}
+getch();
+}*/

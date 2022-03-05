@@ -1,0 +1,58 @@
+#include<stdio.h>
+#include<conio.h>
+#include<iostream.h>
+#include<graphics.h>
+void pixel(float,float,float,float);
+
+void bresenhamCircle(float xc,float yc,float r)
+{
+float x,y,S;
+x = 0;
+y = r;
+S = 3 - 2*(r);
+pixel(xc,yc,x,y);
+while(x<y)
+{
+if(S<0)
+{
+x = x + 1;
+S = S + 4*(x) + 6;
+}
+else
+{
+x = x + 1;
+y = y - 1;
+S = S + 4*(x-y) + 10;
+}
+pixel(xc,yc,x,y);
+}
+}
+
+void pixel(float xc,float yc,float x,float y)
+{
+//First Quadrant
+putpixel(xc+x,yc+y,RED);
+putpixel(xc+y,yc+x,RED);
+//Second Quadrant
+putpixel(xc-x,yc+y,RED);
+putpixel(xc-y,yc+x,RED);
+//Third Quadrant
+putpixel(xc-x,yc-y,RED);
+putpixel(xc-y,yc-x,RED);
+//Fourth Quadrant
+putpixel(xc+x,yc-y,RED);
+putpixel(xc+y,yc-x,RED);
+}
+
+void main()
+{
+float x,y,r;
+int gd=DETECT,gm;
+initgraph(&gd,&gm,"C:\\TURBOC3\\BGI");
+printf("Enter The Coordinates : \nX : ");scanf("%f",&x);
+printf("Y : ");scanf("%f",&y);
+printf("Radius : ");scanf("%f",&r);
+bresenhamCircle(x,y,r);
+getch();
+closegraph();
+}

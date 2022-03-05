@@ -1,0 +1,248 @@
+#include<stdio.h>
+#include<conio.h>
+#include<graphics.h>
+#include"LINES.CPP"  //LINES.CPP is my Own Program For Drawing Lines Refer Folder 1
+
+int xMin=0;
+int yMin=0;
+int xMax=0;
+int yMax=0;
+
+typedef struct coordinate
+{
+int x,y;
+char code[4];
+}PT;
+
+void draw_line(PT, PT);
+PT setCode(PT);
+int visibility(PT, PT);
+void midPoint_clipping();
+
+void accept_window()
+{
+printf("Enter Window Coordinates : ");
+printf("Xmin : ");scanf("%d",&xMin);
+printf("Ymin : ");scanf("%d",&yMin);
+printf("Xmax : ");scanf("%d",&xMax);
+printf("Ymax : ");scanf("%d",&yMax);
+}
+
+void draw_window()
+{
+setcolor(WHITE);
+dda(xMin,yMin,xMax,yMin);
+dda(xMax,yMin,xMax,yMax);
+dda(xMax,yMax,xMin,yMax);
+dda(xMin,yMax,xMin,yMin);
+}
+
+void draw_line(PT p1, PT p2)
+{
+dda(p1.x,p1.y,p2.x,p2.y);
+}
+
+PT setCode(PT p)
+{
+PT ptemp;
+if(p.y <= yMin)
+{
+ptemp.code[0] = '1';
+}
+else
+{
+ptemp.code[0] = '0';
+}
+if(p.y >= yMax)
+{
+ptemp.code[1] = '1';
+}
+else
+{
+ptemp.code[1] = '0';
+}
+if(p.x >= xMax)
+{
+ptemp.code[2] = '1';
+}
+else
+{
+ptemp.code[2] = '0';
+}
+if(p.x <= xMin)
+{
+ptemp.code[3] = '1';
+}
+else
+{
+ptemp.code[3] = '0';
+}
+ptemp.x = p.x;
+ptemp.y = p.y;
+return (ptemp);
+}
+
+int visibility(PT p1, PT p2)
+{
+  int i,flag=0;
+  for(i=0;i<4;i++)
+   {
+     if((p1.code[i] != '0') || (p2.code[i] != '0'))
+      {
+	flag = 1;
+      }
+   }
+     if(flag == 0)
+      {
+	return (0);
+      }
+     for(i=0;i<4;i++)
+      {
+	if((p1.code[i] == p2.code[i]) && (p1.code[i] == '1'))
+	 {
+	   flag=0;
+	 }
+      }
+     if(flag == 0)
+      {
+	return (1);
+      }
+return (2);
+}
+
+void midPoint_clipping(PT p1, PT p2)
+{
+PT mid;
+int v;
+p1 = setCode(p1);
+p2 = setCode(p2);
+v = visibility(p1,p2);
+switch(v)
+{
+case 0:
+draw_line(p1,p2);
+break;
+case 1:break;
+case 2:
+mid.x = p1.x + (p2.x - p1.x) / 2;
+mid.y = p1.y + (p2.y - p1.y) / 2;
+midPoint_clipping(p1,mid);
+mid.x = mid.x + 1;
+mid.y = mid.y + 1;
+midPoint_clipping(mid,p2);
+break;
+}
+}
+
+void main()
+{
+PT p1,p2,ptemp;
+int gd=DETECT,gm;
+initgraph(&gd,&gm,"C:\\TURBOC3\\BGI");
+//Accepting Window And Drawing Window
+accept_window();
+draw_window();
+outtextxy(xMax,yMin,"WINDOW");
+//Accepting Line Coordinates And Drawing Line
+
+printf("Enter 1st Coordinate Of Line : ");scanf("%d %d",&p1.x,&p1.y);
+printf("Enter 2nd Coordinate Of Line : ");scanf("%d %d",&p2.x,&p2.y);
+cleardevice();
+draw_window();
+outtextxy(xMax,yMin,"WINDOW");
+draw_line(p1,p2);
+outtextxy(320,470,"Before Clipping");
+getch();
+cleardevice();
+getch();
+draw_window();
+midPoint_clipping(p1,p2);
+outtextxy(320,470,"After Clipping");
+getch();
+closegraph();
+}
+
+//LINES.CPP
+void dda(float x1,float y1,float x2,float y2)
+{
+int k;
+float s,dx,dy,x,y;
+
+dx = (float)(x2 - x1);
+dy = (float)(y2 - y1);
+if(x1 >= x2 && y1 >= y2)
+{
+dx = dx * (-1);
+dy = dy * (-1);
+}
+if(dx >= dy)
+{
+s = dx;
+}
+else
+{
+s = dy;
+}
+dx = dx/s;
+dy = dy/s;
+x = x1;
+y = y1;
+k = 1;
+if(x1 >= x2 && y1 >= y2)
+{
+while(k <= s)
+{
+putpixel(x,y,WHITE);
+x = x - dx;
+y = y - dy;
+k = k + 1;
+}
+}
+else
+{
+while(k <= s)
+{
+putpixel(x,y,WHITE);
+x = x + dx;
+y = y + dy;
+k = k + 1;
+}
+}
+}
+
+void bresenham(float x1,float y1,float x2,float y2)
+{
+float m,dx,dy,p;
+
+dx = x2 - x1;
+dy = y2 - y1;
+
+if(dx < 0){
+float temp = x2;
+x2 = x1;
+x1 = temp;
+dx *= -1;
+}
+if(dy < 0){
+float temp = y2;
+y2 = y1;
+y1 = temp;
+dy *= -1;
+}
+p = (float)(2*(dy) - (dx));
+for(int x = x1,y = y1;x <= x2;x++)
+{
+if(p < 0)
+{
+putpixel(x,y,BLUE);
+p = (float)(p + 2*(dy));
+}
+else
+{
+putpixel(x,y,BLUE);
+p = (float)(p + (2*(dy) - 2*(dx)));
+y++;
+}
+}
+getch();
+}
